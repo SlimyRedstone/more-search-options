@@ -35,6 +35,16 @@
 			"openNewTab": true
 		},
 		{
+			"title": "Fepallo",
+			"id": "fepallo",
+			"url": "https://www.fapello.com/",
+			"queryLink": "search",
+			"queryTag": "q",
+			"additionalQueries": [],
+			"focusOnOpen": false,
+			"openNewTab": true
+		},
+		{
 			"title": "Youtube",
 			"id": "youtube",
 			"url": "https://www.youtube.com/",
