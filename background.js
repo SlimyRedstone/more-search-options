@@ -3,10 +3,9 @@
 var localDb = { list: [], error: true }
 var debugMode = false
 
-Object.prototype.getDefaultBool = function(key){
+Object.prototype.getDefaultBool = function (key) {
 	return this.hasOwnProperty(key) ? Boolean(this[key]) : false
 }
-
 
 chrome.runtime.onInstalled.addListener(function () {
 	let parentContext = chrome.contextMenus.create({
@@ -37,7 +36,7 @@ chrome.runtime.onInstalled.addListener(function () {
 						parentId: parentContext
 					})
 				})
-				debugMode = data.getDefaultBool('debug')
+				debugMode = localDb.getDefaultBool('debug')
 			} else {
 				console.error('Malformed db.json !')
 			}
@@ -74,9 +73,11 @@ chrome.contextMenus.onClicked.addListener((data, tab) => {
 	const selectedText = data.selectionText.toString()
 
 	const selectedId = data.menuItemId.replace('#', '')
+	let breakForEach = false
 	localDb['list'].forEach((key, index) => {
-		if (key['id'] == selectedId) {
+		if (breakForEach) return
 
+		if (key['id'] == selectedId) {
 			const pageURL = new URL(key['queryLink'], key['url'])
 			var queryStr = `${encodeHTML(selectedText)}`
 			if (key.hasOwnProperty('queryModifiers')) {
@@ -84,7 +85,7 @@ chrome.contextMenus.onClicked.addListener((data, tab) => {
 				if (key['queryModifiers'].hasOwnProperty('suffix')) queryStr = `${queryStr} ${key['queryModifiers']['suffix']}`
 			}
 			pageURL.searchParams.set(key['queryTag'], queryStr.trim())
-			
+
 			if (key.hasOwnProperty('additionalQueries')) {
 				if (key['additionalQueries'].length > 0) {
 					key['additionalQueries'].forEach((q, qI) => {
@@ -95,10 +96,13 @@ chrome.contextMenus.onClicked.addListener((data, tab) => {
 			const focusOnOpen = key.getDefaultBool('focusOnOpen')
 			const openNewTab = key.getDefaultBool('openNewTab')
 			const newTabIndex = openNewTab ? tab.index + 1 : tab.index
-			if (!debugMode) chrome.tabs.create({ url: pageURL.href, index: newTabIndex, active: focusOnOpen })
-
-			console.log('Creating new tab with url: ', pageURL.href)
-
+			if (debugMode) {
+				console.log(`Request to create new tab → ${pageURL.href}`)
+			} else {
+				chrome.tabs.create({ url: pageURL.href, index: newTabIndex, active: focusOnOpen })
+				console.log('Creating new tab with url: ', pageURL.href)
+			}
+			breakForEach = true
 			return
 		}
 	})
