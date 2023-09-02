@@ -4,7 +4,7 @@ var localDb = { list: [], error: true }
 var debugMode = false
 
 Object.prototype.getDefaultBool = function (key) {
-	return this.hasOwnProperty(key) ? Boolean(this[key]) : false
+	return this.hasOwnProperty(key) ? this[key] == true : false
 }
 
 chrome.runtime.onInstalled.addListener(function () {
