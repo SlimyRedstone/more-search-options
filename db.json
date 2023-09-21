@@ -1,6 +1,7 @@
 {
-	"list": [
-		{
+	"list": ["lcsc", "soundcloud", "youtube", "reddit", "datasheet", "mcwiki"],
+	"data": {
+		"lcsc": {
 			"title": "LCSC",
 			"id": "lcsc",
 			"url": "https://www.lcsc.com/",
@@ -10,7 +11,7 @@
 			"focusOnOpen": true,
 			"openNewTab": true
 		},
-		{
+		"soundcloud": {
 			"title": "Soundcloud",
 			"id": "soundcloud",
 			"url": "https://www.soundcloud.com/",
@@ -20,7 +21,7 @@
 			"focusOnOpen": true,
 			"openNewTab": true
 		},
-		{
+		"reddit": {
 			"title": "Reddit",
 			"id": "reddit",
 			"url": "https://old.reddit.com/",
@@ -34,7 +35,7 @@
 			"focusOnOpen": false,
 			"openNewTab": true
 		},
-		{
+		"youtube": {
 			"title": "Youtube",
 			"id": "youtube",
 			"url": "https://www.youtube.com/",
@@ -44,7 +45,7 @@
 			"focusOnOpen": true,
 			"openNewTab": true
 		},
-		{
+		"datasheet": {
 			"title": "Datasheet",
 			"id": "datasheet",
 			"url": "https://www.google.com/",
@@ -55,7 +56,7 @@
 			"focusOnOpen": true,
 			"openNewTab": true
 		},
-		{
+		"mcwiki": {
 			"title": "Minecraft Wiki",
 			"id": "mcwiki",
 			"url": "https://minecraft.fandom.com/",
@@ -65,6 +66,5 @@
 			"focusOnOpen": true,
 			"openNewTab": true
 		}
-	],
-	"debug": false
+	}
 }

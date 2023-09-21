@@ -4,7 +4,7 @@
 	"description": "Adds a multiple search options in the right-click",
 	"manifest_version": 3,
 	"author": "SlimyRedstone",
-	"permissions": ["tabs", "activeTab", "contextMenus"],
+	"permissions": ["tabs", "activeTab", "contextMenus","storage"],
 	"background": {
 		"service_worker": "background.js",
 		"type": "module"
