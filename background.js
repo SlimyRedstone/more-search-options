@@ -24,7 +24,7 @@ chrome.runtime.onInstalled.addListener(function () {
 	let parentContext = chrome.contextMenus.create({
 		title: 'Search "%s" on ...',
 		contexts: ['selection'],
-		id: 'selection'
+		id: 'mso'
 	})
 
 	fetch('./db.json')
@@ -50,7 +50,7 @@ chrome.runtime.onInstalled.addListener(function () {
 					chrome.contextMenus.create({
 						title: site['title'],
 						contexts: ['selection'],
-						id: `#${site['id']}`,
+						id: `mso#${site['id']}`,
 						parentId: parentContext
 					})
 					console.log(`Adding ${site['id']} search option`)
@@ -86,9 +86,10 @@ chrome.contextMenus.onClicked.addListener((data, tab) => {
 
 	selectedText = data.selectionText.toString()
 
-	selectedId = data.menuItemId.replace('#', '')
+	selectedId = data.menuItemId.replace('mso#', '')
 	breakForEach = false
 
+// ✔️❌🔓🔒
 	// const menu = localDb['data'][selectedId]
 	// const menu = JSON.parse( localStorage.getItem('db') )['data']
 	const dbJSON = chrome.storage.local.get(["db"]).then(dbJSON=>{

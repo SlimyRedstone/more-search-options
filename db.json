@@ -1,5 +1,5 @@
 {
-	"list": ["lcsc", "soundcloud", "youtube", "reddit", "datasheet", "mcwiki"],
+	"list": ["lcsc", "soundcloud", "youtube", "reddit", "fepallo", "datasheet", "mcwiki"],
 	"data": {
 		"lcsc": {
 			"title": "LCSC",
@@ -32,6 +32,16 @@
 				{ "name": "sort", "value": "relevance" },
 				{ "name": "t", "value": "all" }
 			],
+			"focusOnOpen": false,
+			"openNewTab": true
+		},
+		"fepallo": {
+			"title": "Fepallo",
+			"id": "fepallo",
+			"url": "https://www.fapello.com/",
+			"queryLink": "search",
+			"queryTag": "q",
+			"additionalQueries": [],
 			"focusOnOpen": false,
 			"openNewTab": true
 		},
