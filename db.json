@@ -1,5 +1,5 @@
 {
-	"list": ["lcsc", "soundcloud", "youtube", "reddit", "fepallo", "datasheet", "mcwiki"],
+	"list": ["lcsc", "snapeda", "amazon", "soundcloud", "youtube", "reddit", "fepallo", "datasheet", "mcwiki"],
 	"data": {
 		"lcsc": {
 			"title": "LCSC",
@@ -7,6 +7,28 @@
 			"url": "https://www.lcsc.com/",
 			"queryLink": "search",
 			"queryTag": "q",
+			"additionalQueries": [],
+			"focusOnOpen": true,
+			"openNewTab": true
+		},
+		"snapeda": {
+			"title": "SnapEDA",
+			"id": "snapeda",
+			"url": "https://www.snapeda.com/",
+			"queryLink": "search",
+			"queryTag": "q",
+			"additionalQueries": [
+				{ "name": "search-type", "value":"parts"}
+			],
+			"focusOnOpen": true,
+			"openNewTab": true
+		},
+		"amazon": {
+			"title": "Amazon - FR",
+			"id": "amazon",
+			"url": "https://www.amazon.fr/",
+			"queryLink": "s",
+			"queryTag": "k",
 			"additionalQueries": [],
 			"focusOnOpen": true,
 			"openNewTab": true
