@@ -2,9 +2,10 @@
 
 var localDb = { list: [], error: true }
 var debugMode = false
+var parentContext = null
 
 Object.prototype.getDefaultBool = function (key) {
-	return this.hasOwnProperty(key) ? this[key] == true : false
+	return this.hasOwnProperty(key) ? this[key] === true : false
 }
 const encodeHTML = (value) => {
 	return /* encodeURI */ value
@@ -20,8 +21,27 @@ const encodeHTMLSpaces = (value) => {
 		.replace(/\s+/gi, '+')
 }
 
-chrome.runtime.onInstalled.addListener(function () {
-	let parentContext = chrome.contextMenus.create({
+function createContext(contextName = '', index = 0) {
+	const contextData = this[contextName]
+	if (contextData['id'].startsWith('#')) {
+		console.error(`Malformed id at index n°${index} → ${contextData['id']}\nID name should not start with #`)
+		return
+	}
+	if (parentContext == null) {
+		console.error('Error while initializing the extension')
+		return
+	}
+	chrome.contextMenus.create({
+		title: contextData['title'],
+		contexts: ['selection'],
+		id: `mso#${contextData['id']}`,
+		parentId: parentContext
+	})
+	console.log(`Adding ${contextData['title']} search option`)
+}
+
+chrome.runtime.onInstalled.addListener(function onInstalledListener() {
+	parentContext = chrome.contextMenus.create({
 		title: 'Search "%s" on ...',
 		contexts: ['selection'],
 		id: 'mso'
@@ -41,7 +61,8 @@ chrome.runtime.onInstalled.addListener(function () {
 
 			if (data.hasOwnProperty('list') && data.hasOwnProperty('data')) {
 				// data.hasKey('list')
-				data['list'].forEach((siteName, index) => {
+
+				/* data['list'].forEach(function (siteName, index) {
 					const site = localDb['data'][siteName]
 					if (site['id'].startsWith('#')) {
 						console.error(`Malformed id at index n°${index} → ${site['id']}\nID name should not start with #`)
@@ -54,7 +75,10 @@ chrome.runtime.onInstalled.addListener(function () {
 						parentId: parentContext
 					})
 					console.log(`Adding ${site['id']} search option`)
-				})
+				}) */
+
+				Object.keys( data['data'] ).forEach(createContext,data['data'])
+
 				console.log(`Debug mode: ${localDb['debug'] ? 'On' : 'Off'}`)
 				debugMode = localDb['debug']
 				localDb['error'] = false
@@ -65,20 +89,22 @@ chrome.runtime.onInstalled.addListener(function () {
 		})
 })
 
-chrome.contextMenus.onClicked.addListener((data, tab) => {
-	var selectedText,
-		selectedId,
-		pageURL,
-		queryStr = ''
-	var breakForEach,
-		focusOnOpen,
-		openNewTab = false
+chrome.contextMenus.onClicked.addListener(function addContextClickListener(data, tab) {
+	var selectedText = ''
+	var selectedId = ''
+	var pageURL = ''
+	var queryStr = ''
+	var breakForEach = false
+	var focusOnOpen = false
+	var openNewTab = false
 	var newTabIndex = 0
-	
+
+	console.group('[More Search Options]: Log')
 	console.log('Displaying "data" content')
 	console.table(data)
-	// console.log('\n\nDisplaying "tab" content')
-	// console.table(tab)
+	console.log('Displaying "tab" content')
+	console.table(tab)
+	console.groupEnd()
 
 	if (typeof data != 'object') return
 	if (!data.hasOwnProperty('menuItemId')) return
@@ -89,34 +115,33 @@ chrome.contextMenus.onClicked.addListener((data, tab) => {
 	selectedId = data.menuItemId.replace('mso#', '')
 	breakForEach = false
 
-// ✔️❌🔓🔒
-	// const menu = localDb['data'][selectedId]
-	// const menu = JSON.parse( localStorage.getItem('db') )['data']
-	const dbJSON = chrome.storage.local.get(["db"]).then(dbJSON=>{
+	// ✔️❌🔓🔒
+	chrome.storage.local.get(['db']).then(function readDatabase(dbJSON) {
+		dbJSON = dbJSON['db']
 		console.log(dbJSON)
-		const menu = dbJSON['db']['data'][selectedId]
-	
+		const menu = dbJSON['data'][selectedId]
+
 		pageURL = new URL(menu['queryLink'], menu['url'])
-	
+
 		queryStr = `${encodeHTML(selectedText)}`
 		if (menu.hasOwnProperty('queryModifiers')) {
 			if (menu['queryModifiers'].hasOwnProperty('prefix')) queryStr = `${menu['queryModifiers']['prefix']} ${queryStr}`
 			if (menu['queryModifiers'].hasOwnProperty('suffix')) queryStr = `${queryStr} ${menu['queryModifiers']['suffix']}`
 		}
 		pageURL.searchParams.set(menu['queryTag'], queryStr.trim())
-	
+
 		if (menu.hasOwnProperty('additionalQueries')) {
 			if (menu['additionalQueries'].length > 0) {
-				menu['additionalQueries'].forEach((q, qI) => {
-					pageURL.searchParams.set(q['name'], q['value'])
+				menu['additionalQueries'].forEach(function additionalQuery(additionalQuery) {
+					pageURL.searchParams.set(additionalQuery['name'], additionalQuery['value'])
 				})
 			}
 		}
-	
+
 		focusOnOpen = menu.getDefaultBool('focusOnOpen')
 		openNewTab = menu.getDefaultBool('openNewTab')
 		newTabIndex = openNewTab ? tab.index + 1 : tab.index
-	
+
 		if (debugMode) {
 			console.log(`Request to create new tab → ${pageURL.href}`)
 		} else {
@@ -125,7 +150,3 @@ chrome.contextMenus.onClicked.addListener((data, tab) => {
 		}
 	})
 })
-// 			}
-// 		}
-// 	})
-// })

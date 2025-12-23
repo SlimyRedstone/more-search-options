@@ -31,18 +31,18 @@
 			}
 			div#main {
 				display: flex;
-				flex-direction: row;
+				flex-direction: column;
 				justify-content: flex-start;
 				flex-wrap: nowrap;
-				align-items: flex-start;
+				align-items: stretch;
 			}
 			div.list {
 				display: flex;
 				flex-direction: column;
 				flex-wrap: nowrap;
 				justify-content: flex-start;
-				align-items: stretch;
-				padding: 15px 10px;
+				align-items: flex-start;
+				padding: 0px 10px;
 				font-size: medium;
 				/* border: 1px solid whitesmoke; */
 			}
@@ -62,14 +62,34 @@
 				background-color: var(--dark-hue);
 				transition: 0.25s ease-in-out;
 			}
+			div.clear {
+				margin: auto;
+				background-color: #ed143d82;
+				font-size: x-large;
+				padding: 0.45em;
+				border-radius: .5em;
+				margin-bottom: 1em;
+			}
+			div.clear:hover {
+				background-color: #ed143d;
+				cursor: pointer;
+				text-decoration: underline;
+			}
+			p#n-tabs-opened {
+				font-size: large;
+				text-align: center;
+				margin: .3em .5em;
+			}
 		</style>
 		<script src="lib/toolbox.js"></script>
-		<script src="popup.js"></script>
 	</head>
 	<body>
 		<h1>More Search Options</h1>
 		<div id="main">
+			<p id="n-tabs-opened"></p>
 			<div data-list class="list"></div>
+			<div class="clear" id="clear-button">Clear Unused Tabs</div>
 		</div>
 	</body>
+	<script src="popup.js"></script>
 </html>
